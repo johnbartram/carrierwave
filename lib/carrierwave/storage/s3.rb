@@ -107,10 +107,11 @@ module CarrierWave
         # [String] file's url
         #
         def url
+          scheme = use_ssl? ? 'https' : 'http'
           if @uploader.s3_cnamed
-            ["http://#{@uploader.s3_bucket}", @path].compact.join('/')
+            ["#{scheme}://#{bucket}", path].compact.join('/')
           else
-            ["http://#{@uploader.s3_bucket}.s3.amazonaws.com", @path].compact.join('/')
+            ["#{scheme}://#{bucket}.s3.amazonaws.com", path].compact.join('/')
           end
         end
 
@@ -153,6 +154,10 @@ module CarrierWave
  
       private
     
+        def use_ssl?
+          @uploader.s3_use_ssl
+        end
+
         def bucket
           @uploader.s3_bucket
         end
